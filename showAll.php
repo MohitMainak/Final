@@ -1,15 +1,18 @@
-<?php include 'header.php'; ?>
+<?php 
+include 'header.php'; 
+include 'db_connect.php';
+?>
 <div class="container mt-5">
   <h3>All Records</h3>
   <?php
-  $conn = new mysqli('localhost', 'root', '', 'final');
+  $conn = getConnection();
   $res = $conn->query("SELECT * FROM string_info");
 
   while ($row = $res->fetch_assoc()) {
     echo "<p>ID: {$row['string_id']} | Message: {$row['message']}</p>";
   }
 
-  $conn->close();
+  closeConnection($conn);
   ?>
 
   <form method="post" action="showAll.php" class="mt-4">
@@ -22,13 +25,13 @@
 
   <?php
   if (isset($_POST['delete'])) {
-    $conn = new mysqli('localhost', 'root', '', 'final');
+    $conn = getConnection();
     $stmt = $conn->prepare("DELETE FROM string_info WHERE string_id = ?");
     $stmt->bind_param("i", $_POST['delete_id']);
     $stmt->execute();
     echo "<p class='text-success mt-3'>Deleted successfully!</p>";
     $stmt->close();
-    $conn->close();
+    closeConnection($conn);
   }
   ?>
 </div>

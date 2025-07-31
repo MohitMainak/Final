@@ -1,4 +1,7 @@
-<?php include 'header.php'; ?>
+<?php 
+include 'header.php'; 
+include 'db_connect.php';
+?>
 <div class="container mt-5">
   <form method="post" action="index.php">
     <div class="mb-3">
@@ -12,14 +15,13 @@
 
 <?php
 if (isset($_POST['submit'])) {
-  $conn = new mysqli('localhost', 'root', '', 'final');
-  if ($conn->connect_error) die("Connection failed");
+  $conn = getConnection();
 
   $stmt = $conn->prepare("INSERT INTO string_info (message) VALUES (?)");
   $stmt->bind_param("s", $_POST['message']);
   $stmt->execute();
   $stmt->close();
-  $conn->close();
+  closeConnection($conn);
 
   echo "<p class='text-success text-center mt-3'>Message saved!</p>";
 }
